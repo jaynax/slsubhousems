@@ -41,20 +41,23 @@ class LoginRegisterController extends Controller
         $request->validate([
             'name' => 'required|string|max:250',
             'email' => 'required|email|max:250|unique:users',
-            'password' => 'required|min:8|confirmed'
+            'password' => 'required|min:8|confirmed',
+            'role_id' => 'required|integer' // Add role_id validation here
         ]);
 
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->password),
+            'role_id' => $request->role_id
         ]);
 
         $credentials = $request->only('email', 'password');
         Auth::attempt($credentials);
         $request->session()->regenerate();
+
         return redirect()->route('dashboard')
-        ->withSuccess('You have successfully registered & logged in!');
+            ->withSuccess('You have successfully registered & logged in!');
     }
 
     /**
@@ -80,19 +83,18 @@ class LoginRegisterController extends Controller
             'password' => 'required'
         ]);
 
-        if(Auth::attempt($credentials))
-        {
+        if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+
             return redirect()->route('dashboard')
                 ->withSuccess('You have successfully logged in!');
         }
 
         return back()->withErrors([
-            'email' => 'Your provided credentials do not match in our records.',
+            'email' => 'Your provided credentials do not match our records.',
         ])->onlyInput('email');
+    }
 
-    } 
-    
     /**
      * Display a dashboard to authenticated users.
      *
@@ -100,19 +102,29 @@ class LoginRegisterController extends Controller
      */
     public function dashboard()
     {
-        if(Auth::check())
-        {
-            return view('auth.dashboard');
+        if (Auth::check()) {
+            $user = Auth::user();
+
+            // Redirect based on user role
+            if ($user->role_id == 1) {
+                return redirect()->route('admin.dashboard');
+            } elseif ($user->role_id == 2) {
+                return redirect()->route('user.dashboard');
+            } elseif ($user->role_id == 3) {
+                return redirect()->route('boarding.dashboard');
+            } else {
+                abort(403); // Forbidden if role is invalid
+            }
         }
-        
+
         return redirect()->route('login')
             ->withErrors([
-            'email' => 'Please login to access the dashboard.',
-        ])->onlyInput('email');
-    } 
-    
+                'email' => 'Please login to access the dashboard.',
+            ])->onlyInput('email');
+    }
+
     /**
-     * Log out the user from application.
+     * Log out the user from the application.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -123,7 +135,6 @@ class LoginRegisterController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('login')
-            ->withSuccess('You have logged out successfully!');;
-    }    
-
+            ->withSuccess('You have logged out successfully!');
+    }
 }

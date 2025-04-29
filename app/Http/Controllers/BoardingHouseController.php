@@ -23,7 +23,7 @@ class BoardingHouseController extends Controller
         }
 
         // Fetch tenants for the boarding house
-        $tenants = Tenant::where('boarding_house_id', $boardinghouse->id)->get();
+        $tenants = Tenant::where('boardinghouse_id', $boardinghouse->id)->get();
 
         return view('boardinghouse.dashboard', compact('boardinghouse', 'tenants'));
     }

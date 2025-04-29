@@ -18,11 +18,26 @@
     <ul class="menu-inner py-1">
         <!-- Dashboard -->
         <li class="menu-item">
-            <a href="{{ route('dashboard') }}" class="menu-link">
+            <a href="{{ route('admin.dashboard') }}" class="menu-link">
                 <i class="menu-icon bx bx-home-circle"></i>
                 <span data-i18n="Analytics">Dashboard</span>
             </a>
         </li>
+             <!-- Edit Profile Button -->
+<li class="menu-item">
+    <a href="{{ route('profile.edit') }}" class="menu-link" style="background-color: #e0f7fa; border-radius: 8px; margin-top: 10px;">
+        <i class="menu-icon bx bx-user-circle"></i>
+        <span>Edit Profile</span>
+    </a>
+</li>
+<!-- Manage Users -->
+<li class="menu-item">
+    <a href="{{ route('manage.users') }}" class="menu-link" style="background-color: #e0f7fa; border-radius: 8px; margin-top: 10px;">
+        <i class="menu-icon bx bx-user"></i>
+        <span>Manage Users</span>
+    </a>
+</li>
+
 
         <!-- Boarding Houses -->
         <li class="menu-item">

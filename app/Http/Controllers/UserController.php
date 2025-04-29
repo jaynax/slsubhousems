@@ -12,10 +12,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        // Fetch all boarding houses
-        $boardinghouses = BoardingHouse::all();
+        // // Fetch all boarding houses
+        // $boardinghouses = BoardingHouse::all();
 
         // Pass them to the dashboard view
-        return view('users.dashboard', compact('boardinghouses'));
+        return view('users.dashboard');
     }
 }

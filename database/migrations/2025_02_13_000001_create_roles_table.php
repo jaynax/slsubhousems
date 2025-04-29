@@ -22,7 +22,7 @@ return new class extends Migration
         DB::table('roles')->insert([
             ['name' => 'Admin', 'url' => '/admin/dashboard'],
             ['name' => 'User', 'url' => '/user/dashboard'],
-            ['name' => 'Boarding House Owner', 'url' => '/boardinghouse/dashboard']
+            ['name' => 'Boardinghouse', 'url' => '/boardinghouse/dashboard']
         ]);
     }
 

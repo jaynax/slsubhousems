@@ -8,11 +8,13 @@ use App\Http\Controllers\BoardingHouseController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\LoginHistoryController;
+use App\Http\Controllers\ManageUsersController;
 
 /*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
+|----------------------------------------------------------------------|
+| Web Routes                                                          |
+|----------------------------------------------------------------------|
 */
 
 // Public Route
@@ -29,33 +31,28 @@ Route::controller(LoginRegisterController::class)->group(function () {
     Route::post('/logout', 'logout')->name('logout')->middleware('auth');
 });
 
-// Redirect Based on Role
-Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', function () {
-        $user = auth()->user();
-        if ($user->role_id == 1) {
-            return redirect()->route('admin.dashboard');
-        } elseif ($user->role_id == 2) {
-            return redirect()->route('user.dashboard');
-        } elseif ($user->role_id == 3) {
-            return redirect()->route('boarding.dashboard');
-        } else {
-            abort(403);
-        }
-    })->name('dashboard');
-});
+// Route for Dashboard with Role-Based Redirection
+Route::middleware(['auth'])->get('/dashboard', [LoginRegisterController::class, 'dashboard'])->name('dashboard');
 
 // Admin Routes
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', function () {
+Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
 
+    Route::get('/boardinghouse', [AdminController::class, 'showBoardingHouse'])->name('admin.boardinghouse');
 
-    Route::get('/admin/boardinghouse', [AdminController::class, 'showBoardingHouse'])->name('admin.boardinghouse');
+    // Tenant Registration Route (Admin Only)
+    Route::post('/tenant/request', [TenantController::class, 'store'])->name('tenant.request');
 
+    // Login History Route (Admin Only)
+    Route::get('/login-history', [LoginHistoryController::class, 'index'])->name('login.history');
 
-    Route::post('/admin/payment/update/{tenant_id}', [PaymentController::class, 'updatePayment'])->name('admin.payment.update');
+    // Manage Users Routes
+    Route::get('/manage-users', [ManageUsersController::class, 'index'])->name('manage.users');  // View Users
+    Route::get('/manage-users/{user}/edit', [ManageUsersController::class, 'edit'])->name('manage.users.edit'); // Edit User Form
+    Route::put('/manage-users/{user}', [ManageUsersController::class, 'update'])->name('manage.users.update'); // Update User
+    Route::delete('/manage-users/{user}', [ManageUsersController::class, 'destroy'])->name('manage.users.destroy'); // Delete User
 });
 
 // User Routes
@@ -64,14 +61,9 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 });
 
 // Boarding House Owner Routes
-Route::middleware(['auth', 'role:boardinghouse'])->group(function () {
-    Route::get('/boarding/dashboard', [BoardingHouseController::class, 'index'])->name('boarding.dashboard');
-    Route::post('/boardinghouse/add-tenant', [TenantController::class, 'store'])->name('boardinghouse.addTenant');
-});
-
-// Tenant Registration Route
-Route::middleware(['auth'])->group(function () {
-    Route::post('/tenant/request', [TenantController::class, 'store'])->name('tenant.request');
+Route::prefix('boardinghouse')->middleware(['auth', 'role:boardinghouse'])->group(function () {
+    Route::get('/dashboard', [BoardingHouseController::class, 'index'])->name('boarding.dashboard');
+    Route::post('/add-tenant', [TenantController::class, 'store'])->name('boardinghouse.addTenant');
 });
 
 // Profile Routes

@@ -1,24 +1,24 @@
 @extends('layouts.admin.index')
 
 @section('content')
-<div class="container-xxl flex-grow-1 container-p-y">
-    <div class="row">
-        <!-- Welcome Card -->
-        <div class="col-xxl-8 mb-6 order-0">
-            <div class="card">
-                <div class="d-flex align-items-start row">
-                    <div class="col-sm-7">
-                        <div class="card-body">
-                            <h5 class="card-title text-primary mb-3">WELCOME ADMIN {{ Auth::user()->name }} 🎉</h5>
-                            <p class="mb-6">SLSU BOARDING HOUSE MANAGEMENT SYSTEM</p>
-                        </div>
-                    </div>
-                </div>
+<div class="container mt-4">
+    <div class="card p-4">
+        <div class="row align-items-center">
+            <!-- Left Side: Welcome message -->
+            <div class="col-md-8">
+                <h3>Welcome, {{ Auth::user()->name }}!</h3>
+                <p class="text-muted">"Great leaders don’t set out to be a leader… they set out to make a difference."</p>
             </div>
-        </div>
 
-        <!-- Boarding House Details -->
-        
+            <!-- Right Side: Profile image -->
+            <div class="col-md-4 text-center">
+                <img src="{{ Auth::user()->profile_image 
+                    ? asset('storage/profile_images/' . Auth::user()->profile_image)
+                    : asset('assets/img/default-profile.png') }}" 
+                    class="rounded-circle border shadow" 
+                    width="120" height="120" 
+                    alt="Profile Image">
+            </div>
         </div>
     </div>
 </div>

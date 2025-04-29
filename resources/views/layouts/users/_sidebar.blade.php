@@ -22,20 +22,40 @@
                 <span data-i18n="Analytics">Dashboard</span>
             </a>
         </li>
+        <!-- Edit Profile Button -->
+<li class="menu-item">
+    <a href="{{ route('profile.edit') }}" class="menu-link" style="background-color: #e0f7fa; border-radius: 8px; margin-top: 10px;">
+        <i class="menu-icon bx bx-user-circle"></i>
+        <span>Edit Profile</span>
+    </a>
+</li>
 
         <!-- Login History -->
-        <li class="menu-header text-uppercase">🔍 Login History</li>
-        <li class="menu-item">
-            <a href="#" class="menu-link">
-                <i class="menu-icon bx bx-history"></i>
-                <span>Last Login: {{ Auth::user()->last_login_at ? Auth::user()->last_login_at->format('M d, Y h:i A') : 'No history' }}</span>
-            </a>
-        </li>
+     
         <li class="menu-item">
             <a href="#" class="menu-link">
                 <i class="menu-icon bx bx-calendar"></i>
                 <span>Registered Since: {{ Auth::user()->created_at->format('M d, Y') }}</span>
             </a>
         </li>
+
+
+        <!-- View Full Login History Button -->
+        <li class="menu-item">
+            <a href="{{ route('login.history') }}" class="menu-link" style="background-color: #f0f0f0; border-radius: 8px; margin-top: 10px;">
+                <i class="menu-icon bx bx-list-ul"></i>
+                <span>View Full Login History</span>
+            </a>
+        </li>
     </ul>
+    <!-- View Full Login History Button -->
+<li class="menu-item">
+    <a href="{{ route('login.history') }}" class="menu-link" style="background-color: #f0f0f0; border-radius: 8px; margin-top: 10px;">
+        <i class="menu-icon bx bx-list-ul"></i>
+        <span>View Full Login History</span>
+    </a>
+</li>
+
+
+
 </aside>

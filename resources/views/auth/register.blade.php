@@ -13,7 +13,7 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(to right, #6a11cb, #2575fc);
+            background: dimgray ;
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -22,7 +22,7 @@
         }
 
         .register-container {
-            background: rgba(255, 255, 255, 0.15);
+            background: linear-gradient(to right, #6a11cb, #2575fc);
             border-radius: 12px;
             backdrop-filter: blur(10px);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
@@ -133,6 +133,9 @@
             <input type="password" id="password_confirmation" name="password_confirmation" class="form-control"
                 placeholder="Confirm Password" required>
         </div>
+
+        <!-- Automatically assign role_id = 2 (User role) -->
+        <input type="hidden" name="role_id" value="2">
 
         <button type="submit" class="btn btn-primary w-100">Sign Up</button>
     </form>
