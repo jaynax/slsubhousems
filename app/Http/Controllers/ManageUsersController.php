@@ -11,17 +11,49 @@ class ManageUsersController extends Controller
     // Show all users
     public function index()
     {
-        $users = User::all(); // You can use pagination if the list is long
+        $users = User::all(); // You can paginate if needed
         return view('admin.manage-users.index', compact('users'));
     }
 
-    // Show the edit form for a user
+    // Show the form to create a new user
+    public function create()
+    {
+        return view('admin.manage-users.create');
+    }
+
+    // Store new user
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email',
+            'password' => 'required|string|min:6|confirmed',
+            'role_id' => 'required|integer',
+        ]);
+
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'role_id' => $request->role_id,
+        ]);
+
+        return redirect()->route('manage.users')->with('success', 'User created successfully!');
+    }
+
+    // Show a single user's details (Read)
+    public function show(User $user)
+    {
+        return view('admin.manage-users.show', compact('user'));
+    }
+
+    // Show the edit form
     public function edit(User $user)
     {
         return view('admin.manage-users.edit', compact('user'));
     }
 
-    // Update the user data
+    // Update user data
     public function update(Request $request, User $user)
     {
         $request->validate([
@@ -40,7 +72,6 @@ class ManageUsersController extends Controller
     // Delete a user
     public function destroy(User $user)
     {
-        // Make sure not to delete the admin account or current logged-in user
         if ($user->id !== Auth::id()) {
             $user->delete();
             return redirect()->route('manage.users')->with('success', 'User deleted successfully!');

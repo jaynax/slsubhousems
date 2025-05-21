@@ -61,6 +61,11 @@ public function showProfile()
     $user = Auth::user();  // Get the currently authenticated user
     return view('profile.index', compact('user'));
 }
+public function boardingHouses()
+{
+    return $this->hasMany(BoardingHouse::class);
+}
+
 
 
 }

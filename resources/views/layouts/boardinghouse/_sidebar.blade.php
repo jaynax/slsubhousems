@@ -1,15 +1,21 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-    <div class="app-brand demo">
-        <a href="index.html" class="app-brand-link">
-            <span class="app-brand-logo demo">
-                <img src="">
+    <!-- Logo -->
+    <div class="logo d-flex align-items-center" style="padding: 20px; text-align: center;">
+        <a href="{{ url('/') }}" class="app-brand-link d-flex align-items-center">
+            <span class="app-brand-logo demo"
+                  style="width: 80px; height: 80px; border-radius: 50%; overflow: hidden; border: 2px solid #ddd; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); display: flex; align-items: center; justify-content: center;">
+                <img src="{{ asset('assets/img/logo/logo-slsu.png') }}" 
+                     alt="SLSU Logo" 
+                     class="img-fluid" 
+                     style="width: 100%; height: 100%; object-fit: cover;">
             </span>
-            <span class="app-brand-text demo menu-text fw-bolder ms-2">SLSUBH-MS</span>
-        </a>
-        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
-            <i class="bx bx-chevron-left bx-sm align-middle"></i>
+            <p style="margin-left: 10px; font-weight: bold; color: #333;">SLSUBHMS</p>
         </a>
     </div>
+
+    <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+        <i class="bx bx-chevron-left bx-sm align-middle"></i>
+    </a>
 
     <div class="menu-inner-shadow"></div>
 
@@ -22,7 +28,7 @@
             </a>
         </li>
 
-    
-     
+        <!-- Boarding House Create Link (Only visible to users with role boardinghouse) -->
         
+    </ul>
 </aside>

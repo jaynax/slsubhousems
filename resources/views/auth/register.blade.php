@@ -112,6 +112,23 @@
             <span class="text-danger">{{ $message }}</span>
             @enderror
         </div>
+          <!-- 📍 Address Field -->
+    <div class="mb-3">
+        <input type="text" id="address" name="address" class="form-control @error('address') is-invalid @enderror"
+            value="{{ old('address') }}" placeholder="Address" required>
+        @error('address')
+        <span class="text-danger">{{ $message }}</span>
+        @enderror
+    </div>
+
+    <!-- ☎️ Phone Number Field -->
+    <div class="mb-3">
+        <input type="text" id="phone" name="phone" class="form-control @error('phone') is-invalid @enderror"
+            value="{{ old('phone') }}" placeholder="Phone Number" required>
+        @error('phone')
+        <span class="text-danger">{{ $message }}</span>
+        @enderror
+    </div>
 
         <div class="mb-3">
             <input type="email" id="email" name="email" class="form-control @error('email') is-invalid @enderror"

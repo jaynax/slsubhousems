@@ -37,11 +37,11 @@
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
-            @include('layouts.admin._sidebar') <!-- Sidebar -->
+            @include('layouts.boardinghouse._sidebar') <!-- Sidebar -->
 
             <!-- Layout page -->
             <div class="layout-page">
-                @include('layouts.admin._topnavbar') <!-- Top Navbar -->
+                @include('layouts.boardinghouse._topnavbar') <!-- Top Navbar -->
 
                 <!-- Content wrapper -->
                 <div class="content-wrapper">

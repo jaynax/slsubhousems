@@ -2,88 +2,100 @@
 
 @section('content')
 <div class="container mt-4">
-    <div class="row">
-        <!-- Boarding House Details -->
-        <div class="col-lg-6 col-md-12">
-            <div class="card shadow-sm p-4 mb-4">
-                <h1 class="text-primary">{{ $boardinghouse->name }} - Dashboard</h1>
-                <p><strong>📍 Address:</strong> {{ $boardinghouse->address }}</p>
-                <p><strong>📞 Contact:</strong> {{ $boardinghouse->contact_number }}</p>
-                <p><strong>🏠 Monthly Rent:</strong> <span class="text-success">{{ number_format($boardinghouse->monthly_rent, 2) }} PHP</span></p>
-                <p><strong>📅 Yearly Rent:</strong> <span class="text-warning">{{ number_format($boardinghouse->yearly_rent, 2) }} PHP</span></p>
-                <p><strong>⏳ Daily Rent:</strong> <span class="text-danger">{{ number_format($boardinghouse->daily_rent, 2) }} PHP</span></p>
-            </div>
-        </div>
+    <div class="card p-4">
 
-        <!-- Tenants Table -->
-        <div class="col-lg-6 col-md-12">
-            <div class="card shadow-sm p-4">
-                <h2 class="text-dark">👥 Tenants</h2>
-                <div class="table-responsive">
-                    <table class="table table-hover text-center">
-                        <thead class="bg-primary text-white">
+        {{-- Boarding House Info --}}
+        @if(isset($boardinghouse))
+            <h3 class="mb-4 text-primary">{{ $boardinghouse->name }}</h3>
+            <p><strong>📍 Location:</strong> {{ $boardinghouse->location }}</p>
+            <p><strong>📞 Contact:</strong> {{ $boardinghouse->contact_number }}</p>
+            <p><strong>📝 Description:</strong> {{ $boardinghouse->description ?? 'No description.' }}</p>
+        @else
+            <div class="alert alert-info">
+                {{ $info ?? 'Please register your boarding house first.' }}
+            </div>
+        @endif
+
+        {{-- Flash Messages --}}
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        {{-- Tenant Applications --}}
+        <h4 class="mt-4 mb-3">👥 Tenant Applications</h4>
+
+        @if(isset($tenants) && $tenants->isNotEmpty())
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead class="table-dark text-center">
+                        <tr>
+                            <th>Tenant Name</th>
+                            <th>Room No.</th>
+                            <th>Status</th>
+                            <th>Due (PHP)</th>
+                            <th style="width: 300px;" class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($tenants as $tenant)
                             <tr>
-                                <th>Tenant Name</th>
-                                <th>Room No.</th>
-                                <th>Status</th>
-                                <th>Due (PHP)</th>
+                                <td>{{ $tenant->name }}</td>
+                                <td>{{ $tenant->room_number ?? 'Not assigned' }}</td>
+                                <td class="text-center">
+                                    @switch($tenant->status)
+                                        @case('pending')
+                                            <span class="badge bg-warning text-dark">Pending</span>
+                                            @break
+                                        @case('approved')
+                                            <span class="badge bg-success">Approved</span>
+                                            @break
+                                        @case('rejected')
+                                            <span class="badge bg-danger">Denied</span>
+                                            @break
+                                        @default
+                                            <span class="badge bg-secondary">{{ ucfirst($tenant->status) }}</span>
+                                    @endswitch
+                                </td>
+                                <td class="text-center">{{ number_format($tenant->due_amount ?? 0, 2) }}</td>
+                                <td class="text-center">
+                                    @if($tenant->status === 'pending')
+                                        <form action="{{ route('tenant.approve', $tenant->id) }}" method="POST" class="d-inline-flex align-items-center" style="gap: 0.5rem;">
+                                            @csrf
+                                            <input type="text" name="room_number" placeholder="Room No." required class="form-control form-control-sm" style="width: 100px;">
+                                            <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                                        </form>
+
+                                        <form action="{{ route('tenant.reject', $tenant->id) }}" method="POST" class="d-inline ms-2">
+                                            @csrf
+                                            <button type="submit" class="btn btn-danger btn-sm">Deny</button>
+                                        </form>
+                                    @elseif($tenant->status === 'approved')
+                                        <span class="text-success fw-bold">Approved</span>
+                                    @elseif($tenant->status === 'rejected')
+                                        <span class="text-danger fw-bold">Denied</span>
+                                    @else
+                                        <span class="text-muted">No actions</span>
+                                    @endif
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($tenants as $tenant)
-                                <tr>
-                                    <td class="fw-bold">{{ $tenant->user->name }}</td>
-                                    <td>{{ $tenant->room_number }}</td>
-                                    <td class="{{ $tenant->rent_status == 'Paid' ? 'text-success' : 'text-danger' }}">
-                                        {{ $tenant->rent_status }}
-                                    </td>
-                                    <td>{{ number_format($tenant->payment_due, 2) }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
-        </div>
-    </div>
+        @else
+            <p class="text-muted">No tenant applications yet.</p>
+        @endif
 
-    <!-- Add Tenant Form -->
-    <div class="row mt-4">
-        <div class="col-md-8 offset-md-2">
-            <div class="card shadow-sm p-4">
-                <h2 class="text-dark text-center">➕ Add Tenant</h2>
-                <form action="{{ route('boardinghouse.addTenant') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="boarding_house_id" value="{{ $boardinghouse->id }}">
-
-                    <div class="mb-3">
-                        <label class="form-label">👤 Tenant ID:</label>
-                        <input type="number" name="user_id" class="form-control" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">🏠 Room Number:</label>
-                        <input type="text" name="room_number" class="form-control" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">💰 Payment Type:</label>
-                        <select name="payment_type" class="form-select">
-                            <option value="monthly">Monthly - {{ number_format($boardinghouse->monthly_rent, 2) }} PHP</option>
-                            <option value="yearly">Yearly - {{ number_format($boardinghouse->yearly_rent, 2) }} PHP</option>
-                            <option value="daily">Daily - {{ number_format($boardinghouse->daily_rent, 2) }} PHP</option>
-                        </select>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary w-100">
-                        <i class="fas fa-user-plus"></i> Add Tenant
-                    </button>
-                </form>
-            </div>
-        </div>
     </div>
 </div>
-
-<!-- Add Bootstrap Icons & FontAwesome for better UI -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 @endsection

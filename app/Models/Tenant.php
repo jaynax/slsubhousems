@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -8,20 +9,25 @@ class Tenant extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'boarding_house_id', 'room_number', 'rent_status'];
+    protected $fillable = [
+        'user_id',
+        'boarding_house_id',
+        'name',
+        'contact_number',
+        'notes',
+        'status',
+    ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    
 
     public function boardingHouse()
     {
         return $this->belongsTo(BoardingHouse::class);
     }
+    // Tenant.php
+public function user()
+{
+    return $this->belongsTo(User::class, 'user_id');
+}
 
-    public function payment()
-    {
-        return $this->hasOne(Payment::class);
-    }
 }

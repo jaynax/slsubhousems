@@ -111,7 +111,7 @@ class LoginRegisterController extends Controller
             } elseif ($user->role_id == 2) {
                 return redirect()->route('user.dashboard');
             } elseif ($user->role_id == 3) {
-                return redirect()->route('boarding.dashboard');
+               return redirect()->route('boardinghouse.dashboard');
             } else {
                 abort(403); // Forbidden if role is invalid
             }
