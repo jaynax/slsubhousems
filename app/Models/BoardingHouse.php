@@ -10,23 +10,23 @@ class BoardingHouse extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',     // ✅ use user_id instead of owner_id
+        'user_id',
         'name',
-        'location',    // ✅ renamed from address
+        'location',
         'contact_number',
-        'description', // optional if you want to include it
+        'description',
+        'image', // ✅ just the field name here
     ];
 
-    // ✅ Each boarding house belongs to a user (with role_id = 3)
+    // Each boarding house belongs to a user
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // ✅ Tenants (if you implement tenant relationship later)
+    // Each boarding house can have many tenants
     public function tenants()
-{
-    return $this->hasMany(Tenant::class, 'boarding_house_id');
-}
-
+    {
+        return $this->hasMany(Tenant::class, 'boarding_house_id');
+    }
 }

@@ -14,23 +14,18 @@ class UserController extends Controller
      */
     public function index()
     {
-        // Get the authenticated user
         $user = Auth::user();
 
-        // Find tenant application for this user, if any
-        $tenantApplication = Tenant::where('user_id', $user->id)->first();
+        // Get tenant application for logged-in user
+        $tenant = Tenant::where('user_id', $user->id)->first();
 
-        // Get tenant status or default to 'none'
-        $tenantStatus = $tenantApplication ? strtolower($tenantApplication->status) : 'none';
+        // Normalize tenant status or default to 'none'
+        $tenantStatus = $tenant ? strtolower(trim($tenant->status)) : 'none';
 
-        // Get all boarding houses available
+        // Get all boarding houses
         $boardingHouses = BoardingHouse::all();
 
-        // Pass data to the dashboard view
-        return view('users.dashboard', [
-            'tenantStatus' => $tenantStatus,
-            'tenant' => $tenantApplication,
-            'boardingHouses' => $boardingHouses,
-        ]);
+        // Pass variables to the dashboard view
+        return view('users.dashboard', compact('tenantStatus', 'tenant', 'boardingHouses'));
     }
 }

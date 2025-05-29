@@ -21,14 +21,42 @@
 
     <ul class="menu-inner py-1">
         <!-- Dashboard -->
-        <li class="menu-item">
-            <a href="{{ route('dashboard') }}" class="menu-link">
+        <li class="menu-item {{ request()->routeIs('boardinghouse.dashboard') ? 'active' : '' }}">
+            <a href="{{ route('boardinghouse.dashboard') }}" class="menu-link">
                 <i class="menu-icon bx bx-home-circle"></i>
-                <div data-i18n="Analytics">Dashboard</div>
+                <div data-i18n="Dashboard">Dashboard</div>
             </a>
         </li>
 
-        <!-- Boarding House Create Link (Only visible to users with role boardinghouse) -->
-        
+        <!-- Tenants Management -->
+        <!-- <li class="menu-item {{ request()->is('boardinghouse/tenant*') ? 'active' : '' }}">
+            <a href="{{ route('tenant.edit', ['tenant' => Auth::user()->boardingHouse->tenants()->first()?->id ?? 0]) }}#tenants" class="menu-link">
+                <i class="menu-icon bx bx-user-check"></i>
+                <div data-i18n="Tenants">Tenants</div>
+            </a>
+        </li> -->
+
+        <!-- Profile Edit -->
+        <li class="menu-item">
+    <a href="{{ route('profile.edit') }}" class="menu-link" style="background-color: #e0f7fa; border-radius: 8px; margin-top: 10px;">
+        <i class="menu-icon bx bx-user-circle"></i>
+        <span>Edit Profile</span>
+    </a>
+</li>
+<!-- Tenants List (Index) -->
+<li class="menu-item {{ request()->routeIs('boardinghouse.tenants.index') ? 'active' : '' }}">
+    <a href="{{ route('boardinghouse.tenants.index') }}" class="menu-link">
+        <i class="menu-icon bx bx-list-ul"></i>
+        <div data-i18n="Tenants List">Tenants List</div>
+    </a>
+</li>
+<!-- Edit Boarding House -->
+<li class="menu-item {{ request()->routeIs('boardinghouse.edit') ? 'active' : '' }}">
+    <a href="{{ route('boardinghouse.edit') }}" class="menu-link" style="background-color: #e0f7fa; border-radius: 8px; margin-top: 10px;">
+        <i class="menu-icon bx bx-buildings"></i>
+        <span>Edit Boarding House</span>
+    </a>
+</li>
+
     </ul>
 </aside>

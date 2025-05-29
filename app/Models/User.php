@@ -65,6 +65,10 @@ public function boardingHouses()
 {
     return $this->hasMany(BoardingHouse::class);
 }
+public function boardingHouse()
+{
+    return $this->hasOne(BoardingHouse::class, 'user_id');
+}
 
 
 

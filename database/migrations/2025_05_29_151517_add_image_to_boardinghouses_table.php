@@ -9,14 +9,12 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+   public function up()
 {
     Schema::table('boarding_houses', function (Blueprint $table) {
-        $table->unsignedBigInteger('user_id')->after('id');
-        $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        $table->string('image')->nullable();
     });
 }
-
 
     /**
      * Reverse the migrations.

@@ -9,7 +9,8 @@
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
-    <form action="{{ route('manage.users.boardinghouse.store', $user->id) }}" method="POST">
+    {{-- ADD enctype="multipart/form-data" for file uploads --}}
+    <form action="{{ route('manage.users.boardinghouse.store', $user->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <div class="mb-3">
@@ -57,6 +58,16 @@
             <textarea id="description" name="description" rows="3" 
                 class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
             @error('description')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+
+        {{-- ✅ ADDED: Boarding House Image Input --}}
+        <div class="mb-3">
+            <label for="image" class="form-label">Boarding House Image (Optional)</label>
+            <input type="file" id="image" name="image" 
+                class="form-control @error('image') is-invalid @enderror" accept="image/*">
+            @error('image')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>

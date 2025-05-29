@@ -6,6 +6,11 @@
 
         {{-- Boarding House Info --}}
         @if(isset($boardinghouse))
+            @if($boardinghouse->image)
+                <div class="mb-3 text-center">
+                    <img src="{{ asset('storage/boardinghouses/' . $boardinghouse->image) }}" alt="Boarding House Image" class="img-fluid rounded" style="max-height: 300px;">
+                </div>
+            @endif
             <h3 class="mb-4 text-primary">{{ $boardinghouse->name }}</h3>
             <p><strong>📍 Location:</strong> {{ $boardinghouse->location }}</p>
             <p><strong>📞 Contact:</strong> {{ $boardinghouse->contact_number }}</p>
@@ -39,16 +44,26 @@
                 <table class="table table-striped table-hover align-middle">
                     <thead class="table-dark text-center">
                         <tr>
+                            <th>Profile Image</th>
                             <th>Tenant Name</th>
                             <th>Room No.</th>
                             <th>Status</th>
                             <th>Due (PHP)</th>
-                            <th style="width: 300px;" class="text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($tenants as $tenant)
                             <tr>
+                                <tr>
+                                    <td class="text-center">
+                                        <img 
+                                            src="{{ $tenant->user && $tenant->user->profile_image 
+                                                ? asset('storage/profile_images/' . $tenant->user->profile_image) 
+                                                : asset('assets/img/default-profile.png') }}" 
+                                            alt="Profile Image" 
+                                            class="rounded-circle border shadow" 
+                                            width="50" height="50">
+                                    </td>
                                 <td>{{ $tenant->name }}</td>
                                 <td>{{ $tenant->room_number ?? 'Not assigned' }}</td>
                                 <td class="text-center">
@@ -67,26 +82,6 @@
                                     @endswitch
                                 </td>
                                 <td class="text-center">{{ number_format($tenant->due_amount ?? 0, 2) }}</td>
-                                <td class="text-center">
-                                    @if($tenant->status === 'pending')
-                                        <form action="{{ route('tenant.approve', $tenant->id) }}" method="POST" class="d-inline-flex align-items-center" style="gap: 0.5rem;">
-                                            @csrf
-                                            <input type="text" name="room_number" placeholder="Room No." required class="form-control form-control-sm" style="width: 100px;">
-                                            <button type="submit" class="btn btn-success btn-sm">Approve</button>
-                                        </form>
-
-                                        <form action="{{ route('tenant.reject', $tenant->id) }}" method="POST" class="d-inline ms-2">
-                                            @csrf
-                                            <button type="submit" class="btn btn-danger btn-sm">Deny</button>
-                                        </form>
-                                    @elseif($tenant->status === 'approved')
-                                        <span class="text-success fw-bold">Approved</span>
-                                    @elseif($tenant->status === 'rejected')
-                                        <span class="text-danger fw-bold">Denied</span>
-                                    @else
-                                        <span class="text-muted">No actions</span>
-                                    @endif
-                                </td>
                             </tr>
                         @endforeach
                     </tbody>

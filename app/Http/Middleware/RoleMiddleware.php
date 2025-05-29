@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Role;
 
 class RoleMiddleware
 {
@@ -16,18 +17,16 @@ class RoleMiddleware
      * @param  int  $role
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, $role)
+    public function handle(Request $request, Closure $next, $role_access)
     {
         if (!Auth::check()) {
             return redirect('/login'); // Redirect to login if not authenticated
         }
 
         $user = Auth::user();
-
+        $role = Role::where('id' ,$user->role_id)->first();
         // Check role by comparing the role_id
-        if (($role == 'admin' && $user->role_id == 1) ||
-            ($role == 'user' && $user->role_id == 2) ||
-            ($role == 'boardinghouse' && $user->role_id == 3)) {
+        if (strtolower($role->name) == strtolower($role_access)) {
             return $next($request);
         }
 

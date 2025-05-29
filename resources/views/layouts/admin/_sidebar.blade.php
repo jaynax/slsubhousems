@@ -41,7 +41,7 @@
 
         <!-- Boarding Houses -->
         <li class="menu-item">
-            <a href="{{ route('admin.boardinghouse') }}" class="menu-link">
+            <a href="{{ route('admin.boardinghouse.index') }}" class="menu-link">
                 <i class="menu-icon bx bx-building-house"></i>
                 <span data-i18n="BoardingHouses">Boarding Houses</span>
             </a>
